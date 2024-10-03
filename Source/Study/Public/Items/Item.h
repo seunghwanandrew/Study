@@ -8,11 +8,11 @@ class STUDY_API AItem : public AActor
 {
 	GENERATED_BODY()
 #pragma region Constructor and Function
-public:	
+public:
 	AItem();
 	virtual void Tick(float DeltaTime) override;
 protected:
-	virtual void BeginPlay() override;	
+	virtual void BeginPlay() override;
 	UFUNCTION(BlueprintPure)
 	float TransformedSin();
 	UFUNCTION(BlueprintPure)

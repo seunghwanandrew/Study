@@ -38,8 +38,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
 	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* ViewCamera;
-	
+	UCameraComponent* ViewCamera;	
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
