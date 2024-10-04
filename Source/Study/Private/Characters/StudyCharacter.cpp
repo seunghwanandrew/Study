@@ -82,11 +82,9 @@ void AStudyCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-
 void AStudyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AStudyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -98,6 +96,7 @@ void AStudyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AStudyCharacter::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AStudyCharacter::Look);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 	}
 }
 
