@@ -18,7 +18,9 @@ void UStudyCharacterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	Super::NativeUpdateAnimation(DeltaTime);
 	if (StudyCharacterMovement)
 	{
-		GroundSpeed = UKismetMathLibrary::VSizeXY(StudyCharacterMovement->Velocity);
+		FVector VelocityValue = StudyCharacterMovement->Velocity;
+		GroundSpeed = FMath::Sqrt((VelocityValue.X * VelocityValue.X) + (VelocityValue.Y * VelocityValue.Y));
+		//GroundSpeed = UKismetMathLibrary::VSizeXY(StudyCharacterMovement->Velocity);
 		IsFalling = StudyCharacterMovement->IsFalling();
 	}
 }
