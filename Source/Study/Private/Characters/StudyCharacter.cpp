@@ -12,6 +12,8 @@
 #include "Items/Item.h"
 #include "Items/Weapons/Weapon.h"
 
+#include "Animation/AnimMontage.h"
+
 AStudyCharacter::AStudyCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -60,6 +62,7 @@ void AStudyCharacter::Move(const FInputActionValue& Value)
 {
 	const FVector2D MoveDirection = Value.Get<FVector2D>();
 
+	if (ActionState == EActionState::EAS_Attacking) return;
 	if (GetController())
 	{
 		const FRotator Rotation = GetController()->GetControlRotation();
@@ -85,6 +88,21 @@ void AStudyCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void AStudyCharacter::Attack()
+{
+	if (CanAttack())
+	{
+		PlayAttackMontage();
+		ActionState = EActionState::EAS_Attacking;
+	}
+}
+
+bool AStudyCharacter::CanAttack()
+{
+	return ActionState == EActionState::EAS_Unoccupied && 
+		CharacterState != ECharacterState::ECS_Unequipped;
+}
+
 void AStudyCharacter::EKeyPressed()
 {
 	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
@@ -93,6 +111,40 @@ void AStudyCharacter::EKeyPressed()
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
 		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
 	}
+}
+
+void AStudyCharacter::PlayAttackMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && AttackMontage)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+		const int32 Selection = FMath::RandRange(0, 3);
+		FName SectionName = FName();
+		switch (Selection)
+		{
+		case 0:
+			SectionName = FName("Attack1");
+			break;
+		case 1:
+			SectionName = FName("Attack2");
+			break;
+		case 2:
+			SectionName = FName("Attack3");
+			break;
+		case 3:
+			SectionName = FName("Attack4");
+			break;
+		default:
+			break;
+		}
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
+}
+
+void AStudyCharacter::AttackEnd()
+{
+	ActionState = EActionState::EAS_Unoccupied;
 }
 
 void AStudyCharacter::Tick(float DeltaTime)
@@ -111,6 +163,7 @@ void AStudyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AStudyCharacter::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AStudyCharacter::EKeyPressed);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AStudyCharacter::Attack);
 	}
 }
 

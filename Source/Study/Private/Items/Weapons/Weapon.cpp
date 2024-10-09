@@ -18,4 +18,5 @@ void AWeapon::Equip(USceneComponent* InParent, FName InSocketName)
 	FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
 	// ItemMesh is Inherited from item class
 	ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
+	ItemState = EItemState::EIS_Equipped;
 }

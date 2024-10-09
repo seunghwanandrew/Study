@@ -11,6 +11,7 @@ class USpringArmComponent;
 class UCameraComponent;
 class UGroomComponent;
 class AItem;
+class UAnimMontage;
 
 UCLASS()
 class STUDY_API AStudyCharacter : public ACharacter
@@ -25,9 +26,21 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/*
+	* Callbacks for Input
+	*/
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void Attack();
 	void EKeyPressed();
+
+	/*
+	* Play Montage Functions
+	*/
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
+	void PlayAttackMontage();
+	bool CanAttack();
 public:
 	/* Setter */
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
@@ -38,6 +51,9 @@ public:
 #pragma region Variable
 private:
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+
+	UPROPERTY(BlueprintReadWrite, Meta = (AllowPrivateAccess = "true"))
+	EActionState ActionState = EActionState::EAS_Unoccupied;
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
@@ -61,5 +77,14 @@ protected:
 	UInputAction* JumpAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* EquipAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	UInputAction* AttackAction;
+
+	/*
+	* Animation Monatages
+	*/
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	UAnimMontage* AttackMontage;
+
 #pragma endregion
 };

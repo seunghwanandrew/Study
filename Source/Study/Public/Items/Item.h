@@ -5,6 +5,12 @@
 
 class USphereComponent;
 
+enum class EItemState : uint8
+{
+	EIS_Hovering,
+	EIS_Equipped
+};
+
 UCLASS()
 class STUDY_API AItem : public AActor
 {
@@ -44,6 +50,8 @@ protected:
 	float Amplitude = 0.25f;
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Sine Parameters")
 	float TimeConstant = 5.0f;
+
+	EItemState ItemState = EItemState::EIS_Hovering;
 #pragma endregion
 
 };
