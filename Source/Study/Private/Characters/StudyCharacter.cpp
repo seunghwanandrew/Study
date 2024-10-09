@@ -9,6 +9,9 @@
 
 #include "GroomComponent.h"
 
+#include "Items/Item.h"
+#include "Items/Weapons/Weapon.h"
+
 AStudyCharacter::AStudyCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -82,6 +85,16 @@ void AStudyCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void AStudyCharacter::EKeyPressed()
+{
+	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
+	if (OverlappingWeapon)
+	{
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+	}
+}
+
 void AStudyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -97,6 +110,7 @@ void AStudyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AStudyCharacter::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AStudyCharacter::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(EquipAction, ETriggerEvent::Triggered, this, &AStudyCharacter::EKeyPressed);
 	}
 }
 

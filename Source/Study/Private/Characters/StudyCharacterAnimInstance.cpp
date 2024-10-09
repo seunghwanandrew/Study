@@ -22,5 +22,6 @@ void UStudyCharacterAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		GroundSpeed = FMath::Sqrt((VelocityValue.X * VelocityValue.X) + (VelocityValue.Y * VelocityValue.Y));
 		//GroundSpeed = UKismetMathLibrary::VSizeXY(StudyCharacterMovement->Velocity);
 		IsFalling = StudyCharacterMovement->IsFalling();
+		CharacterState = StudyCharacter->GetCharacterState();
 	}
 }

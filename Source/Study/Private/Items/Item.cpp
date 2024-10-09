@@ -1,6 +1,7 @@
 #include "Items/Item.h"
 #include "Study/DebugMacros.h"
 #include "Components/SphereComponent.h"
+#include "Characters/StudyCharacter.h"
 
 AItem::AItem()
 {
@@ -33,23 +34,19 @@ float AItem::TransformedCos()
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
 	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	const FString OtherActorName = OtherActor->GetName();
-
-	UE_LOG(LogTemp, Warning, TEXT("Other Actor Name : %s"), *OtherActorName);
-
-	if (GEngine)
+	AStudyCharacter* StudyCharacter = Cast<AStudyCharacter>(OtherActor);
+	if (StudyCharacter)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 10.f, FColor::Cyan, OtherActorName);
-	}	
+		StudyCharacter->SetOverlappingItem(this);
+	}
 }
 
 void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	const FString OtherActorName = FString("Ending Overlap with : ") + OtherActor->GetName();
-
-	if (GEngine)
+	AStudyCharacter* StudyCharacter = Cast<AStudyCharacter>(OtherActor);
+	if (StudyCharacter)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 10.f, FColor::White, OtherActorName);
+		StudyCharacter->SetOverlappingItem(nullptr);
 	}
 }
 
